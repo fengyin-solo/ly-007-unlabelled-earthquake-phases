@@ -7,6 +7,7 @@ import math
 import os
 import random
 import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -152,7 +153,7 @@ def invoke(
     started = time.monotonic()
     completed = subprocess.run(
         [
-            "python3",
+            sys.executable,
             TASK_APP,
             str(input_path),
             str(result_path),
@@ -796,6 +797,18 @@ def test_velocity_and_clock_bounds_are_enforced(tmp_path: Path):
     )
     assert all(not result_path.exists() for result_path, _, _ in outcomes)
     assert all(not ledger_path.exists() for _, ledger_path, _ in outcomes)
+    endpoint = default_payload()
+    endpoint["clock_bound_s"] = 0.25
+    result, result_path, ledger_path, completed, _ = run_payload(
+        tmp_path,
+        endpoint,
+        "clock-bound-endpoint",
+    )
+    assert completed.returncode == 0
+    assert completed.stderr == ""
+    assert result is not None
+    assert result_path.is_file()
+    assert ledger_path.is_file()
 
 
 def test_event_count_is_exactly_three(tmp_path: Path):

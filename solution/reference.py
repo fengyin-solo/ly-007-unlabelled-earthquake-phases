@@ -202,13 +202,13 @@ def validate_payload(value: object) -> dict[str, Any]:
     if type(payload["event_count"]) is not int or payload["event_count"] != EVENT_COUNT:
         raise BadInput("event count")
     clock_bound = finite_number(payload["clock_bound_s"])
-    if not 0.0 < clock_bound <= 0.25:
+    if not clock_bound > 0.0 or clock_bound > 0.25:
         raise BadInput("clock bound")
 
     velocity = exact_object(payload["velocity_km_s"], {"p", "s"})
     vp = finite_number(velocity["p"])
     vs = finite_number(velocity["s"])
-    if not 1.0 <= vs < vp <= 12.0:
+    if vs < 1.0 or not vs < vp or vp > 12.0:
         raise BadInput("velocity")
 
     raw_stations = payload["stations"]
@@ -224,7 +224,12 @@ def validate_payload(value: object) -> dict[str, Any]:
         station_ids.add(station_id)
         x_km = finite_number(row["x_km"])
         y_km = finite_number(row["y_km"])
-        if not -250.0 <= x_km <= 250.0 or not -250.0 <= y_km <= 250.0:
+        if (
+            x_km < -250.0
+            or x_km > 250.0
+            or y_km < -250.0
+            or y_km > 250.0
+        ):
             raise BadInput("station range")
         stations.append(Station(station_id, x_km, y_km))
     station_index = {
@@ -247,7 +252,7 @@ def validate_payload(value: object) -> dict[str, Any]:
         if station_id not in station_index:
             raise BadInput("unknown station")
         time_s = finite_number(row["time_s"])
-        if not 0.0 <= time_s <= 1000.0:
+        if time_s < 0.0 or time_s > 1000.0:
             raise BadInput("arrival range")
         index = station_index[station_id]
         per_station[index] += 1
@@ -318,9 +323,9 @@ def fit_track(track: Track, stations: list[Station]) -> Track:
     if depth_squared < -0.25:
         return Track(pairs, None, math.inf)
     depth_km = math.sqrt(max(0.0, depth_squared))
-    if not (-20.0 <= x_km <= 90.0 and -20.0 <= y_km <= 60.0):
+    if x_km < -20.0 or x_km > 90.0 or y_km < -20.0 or y_km > 60.0:
         return Track(pairs, None, math.inf)
-    if not 0.1 <= depth_km <= 35.0:
+    if depth_km < 0.1 or depth_km > 35.0:
         return Track(pairs, None, math.inf)
 
     squared = 0.0
@@ -365,7 +370,10 @@ def station_pairings(
         valid = True
         for p_arrival, s_arrival in matching:
             difference = s_arrival.time_s - p_arrival.time_s
-            if not MIN_ONSET_DIFFERENCE <= difference <= difference_scale * MAX_DISTANCE_KM:
+            if (
+                difference < MIN_ONSET_DIFFERENCE
+                or difference > difference_scale * MAX_DISTANCE_KM
+            ):
                 valid = False
                 break
             pairs.append(
@@ -845,7 +853,7 @@ def replay_is_complete(
     if result_path.exists():
         if digest_bytes(result_path.read_bytes()) != entry["output_digest"]:
             raise LedgerConflict("existing result digest")
-        return True
+        return result_path.is_file()
     return False
 
 
