@@ -1,0 +1,183 @@
+{
+  "gate_tests": [
+    "test_outputs.py::test_global_association_matches_hidden_truth"
+  ],
+  "schema_version": 1,
+  "tests": {
+    "test_outputs.py::test_all_arrivals_are_used_once": {
+      "priority": "core",
+      "rationale": "漏用或重复使用到时会使全局残差和事件目录失去物理意义。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_ambiguous_association_is_refused": {
+      "priority": "core",
+      "rationale": "近等支持关联必须拒绝，不能任意选择一组到时标签。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_arrival_input_order_does_not_change_result": {
+      "priority": "core",
+      "rationale": "输入顺序不能替代缺失的事件与相位标签，否则现场目录稍作打乱就会得到不同结果。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_arrival_types_and_ranges_are_enforced": {
+      "priority": "supporting",
+      "rationale": "到时必须是有限数值并落在公开秒数范围内。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_candidate_association_space_is_large": {
+      "priority": "supporting",
+      "rationale": "候选空间下界说明结果不能由短排列或逐项枚举得到。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_clock_offsets_have_zero_mean": {
+      "priority": "core",
+      "rationale": "零均值规范解决定钟差和发震时刻之间的唯一分解。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_clock_offsets_match_hidden_truth": {
+      "priority": "core",
+      "rationale": "有界钟差恢复错误会使走时残差被错误吸收。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_close_events_remain_distinct": {
+      "priority": "core",
+      "rationale": "相邻事件必须依据整站相位轨迹分开，而不是按时间切片。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_corrupt_ledger_is_reinitialized": {
+      "priority": "supporting",
+      "rationale": "损坏台账应按业务契约重新初始化，而不是长期阻断目录。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_duplicate_json_members_are_refused": {
+      "priority": "supporting",
+      "rationale": "重复 JSON 成员不能被静默覆盖成任意一条到时。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_event_count_is_exactly_three": {
+      "priority": "supporting",
+      "rationale": "事件数必须严格为三个，不能用布尔值绕过整数判别。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_event_order_follows_origin_time": {
+      "priority": "supporting",
+      "rationale": "事件编号顺序需与最终发震时刻一致，便于稳定消费。",
+      "weight": 0.023
+    },
+    "test_outputs.py::test_global_residual_matches_direct_recomputation": {
+      "priority": "core",
+      "rationale": "结果声明的全局残差必须能从交付关联和源参数复算。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_hypocenter_depth_matches_hidden_truth": {
+      "priority": "core",
+      "rationale": "震源深度必须由三维闭合恢复，不能使用固定深度。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_hypocenter_xy_matches_hidden_truth": {
+      "priority": "core",
+      "rationale": "震中平面位置是台网复核需要交付的核心源参数。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_ledger_hash_chain_is_canonical": {
+      "priority": "supporting",
+      "rationale": "台账行哈希与规范字节必须能逐行复核链完整性。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_new_run_appends_without_rewriting_prefix": {
+      "priority": "supporting",
+      "rationale": "新运行只能追加，已有复核历史不得被改写。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_origin_times_match_hidden_truth": {
+      "priority": "core",
+      "rationale": "发震时刻需与三个事件和八个钟差联合求定。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_phase_pairing_matches_hidden_truth": {
+      "priority": "core",
+      "rationale": "P/S 同源配对错误会同时污染距离、定位和钟差解。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_public_upper_case_completes_within_limit": {
+      "priority": "supporting",
+      "rationale": "公开规模的完整目录必须在十二秒内完成，否则复核流程无法按现场时限收口。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_refusal_channel_is_exact": {
+      "priority": "supporting",
+      "rationale": "输入拒收必须写入约定标准错误且保持标准输出为空。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_rejection_preserves_inputs_and_outputs": {
+      "priority": "supporting",
+      "rationale": "任何拒收都不得改写输入、旧结果或旧台账。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_residual_below_public_limit_is_accepted": {
+      "priority": "core",
+      "rationale": "残差上限内的合法目录必须正常收口，否则真实观测会被过度拒绝而无法交付。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_residual_over_public_limit_is_refused": {
+      "priority": "core",
+      "rationale": "超过公开残差上限的关联不能作为定位结果放行。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_result_schema_is_exact": {
+      "priority": "supporting",
+      "rationale": "结果及嵌套对象字段集合必须稳定，复核端才能直接消费。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_result_serialization_is_canonical": {
+      "priority": "supporting",
+      "rationale": "六位 half-up 与紧凑尾换行保证结果字节可复算。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_root_field_set_is_enforced": {
+      "priority": "supporting",
+      "rationale": "顶层导出字段必须按现场契约精确匹配，拒绝额外业务对象。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_same_run_different_input_conflicts": {
+      "priority": "supporting",
+      "rationale": "同号不同输入必须拒收并保留旧结果与旧台账。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_same_run_replay_is_idempotent": {
+      "priority": "supporting",
+      "rationale": "相同输入重放必须保持结果和台账字节不变。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_station_and_arrival_counts_are_enforced": {
+      "priority": "supporting",
+      "rationale": "八站四十八到时是公开规模和联合求解的前提。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_station_ids_are_unique_and_known": {
+      "priority": "supporting",
+      "rationale": "站号与到时号必须唯一，且到时只能引用已知台站。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_station_pairing_cancels_clock_offsets": {
+      "priority": "core",
+      "rationale": "同站 P/S 配对必须先消去共同钟差，才能支持跨站关联。",
+      "weight": 0.044
+    },
+    "test_outputs.py::test_success_channel_is_exact": {
+      "priority": "supporting",
+      "rationale": "成功信号与运行号回显是调度端判断完成的公开接口。",
+      "weight": 0.019
+    },
+    "test_outputs.py::test_velocity_and_clock_bounds_are_enforced": {
+      "priority": "supporting",
+      "rationale": "波速与钟差边界必须阻止非物理或超界输入进入求解。",
+      "weight": 0.019
+    }
+  },
+  "weight_policy": {
+    "basis": "business_priority",
+    "core_min_share": 0.5,
+    "version": 1
+  }
+}
