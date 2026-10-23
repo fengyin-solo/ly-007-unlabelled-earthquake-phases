@@ -283,10 +283,12 @@ def default_run(
 
 def test_global_association_matches_hidden_truth(default_run):
     """题面：“三个事件在每站各出现一次 P 和一次 S；48 条到时必须全部使用一次”。"""
+    print("HARDCODE-BASE INPUT_SCENARIO_DEFAULT")
     result = default_run[0]
     actual = set(event_memberships(result))
     expected = set(truth_memberships(hidden_truth()))
     assert actual == expected
+    assert result["global_residual_rms"] <= 0.030
 
 
 def test_phase_pairing_matches_hidden_truth(default_run):
@@ -572,6 +574,7 @@ def test_public_upper_case_completes_within_limit(default_run):
 
 def test_close_events_remain_distinct(tmp_path: Path):
     """题面：“三个事件在每站各出现一次 P 和一次 S；48 条到时必须全部使用一次”。"""
+    print("HARDCODE-VARIANT INPUT_SCENARIO_CLOSE_EVENTS")
     events = [
         {"x_km": 18.0, "y_km": 11.0, "depth_km": 6.0, "origin_time_s": 2.0},
         {"x_km": 21.0, "y_km": 12.0, "depth_km": 8.0, "origin_time_s": 5.0},
@@ -582,6 +585,7 @@ def test_close_events_remain_distinct(tmp_path: Path):
     assert completed.returncode == 0
     assert set(event_memberships(result)) == set(truth_memberships(truth))
     assert len({event["event_id"] for event in result["events"]}) == 3
+    assert result["global_residual_rms"] <= 0.030
 
 
 def test_success_channel_is_exact(default_run):
